@@ -16,19 +16,22 @@ import java.util.List;
 @Configuration
 public class AIConfig {
 
-    public OllamaChatModel getOllamaChatModel() {
-        OllamaApi ollamaApi = new OllamaApi("http://localhost:11424");
+    public OllamaChatModel primaryOllamaModel() {
+        return createModel("llama3.2", 0.7);
+    }
+
+    public OllamaChatModel createModel(String modelName, double weight) {
+        OllamaApi ollamaApi = new OllamaApi("http://localhost:11434");
 
         OllamaOptions ollamaOptions = OllamaOptions.create()
-                .withModel("llama3.2")
-                .withTemperature(0.7);
+                .withModel(modelName)
+                .withTemperature(weight);
 
         // Empty/default helper dependencies
         FunctionCallbackContext callbackContext = new FunctionCallbackContext();
         List<FunctionCallback> callbacks = List.of();
         ObservationRegistry registry = ObservationRegistry.NOOP;
         ModelManagementOptions managementOptions = ModelManagementOptions.defaults();
-
 
         return new OllamaChatModel(
                 ollamaApi,
@@ -37,12 +40,11 @@ public class AIConfig {
                 callbacks,
                 registry,
                 managementOptions);
-
     }
 
     @Bean
-    public ChatClient chatClient(OllamaChatModel chatClient) {
-//        return chatClient;
-        return ChatClient.create(chatClient);
+    public ChatClient chatClient() {
+        ChatClient chatClient = ChatClient.create(primaryOllamaModel());
+        return chatClient;
     }
 }

@@ -2,6 +2,8 @@ package com.dailybuffer.springai.configuration;
 
 import io.micrometer.observation.ObservationRegistry;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.model.function.FunctionCallback;
 import org.springframework.ai.model.function.FunctionCallbackContext;
 import org.springframework.ai.ollama.OllamaChatModel;
@@ -16,8 +18,13 @@ import java.util.List;
 @Configuration
 public class AIConfig {
 
+    private final ChatMemory chatMemory;
+    public AIConfig(ChatMemory chatMemory) {
+        this.chatMemory = chatMemory;
+    }
+
     public OllamaChatModel primaryOllamaModel() {
-        return createModel("llama3.2", 0.7);
+        return createModel("llama3.2", 0.9);
     }
 
     public OllamaChatModel createModel(String modelName, double weight) {
@@ -44,7 +51,11 @@ public class AIConfig {
 
     @Bean
     public ChatClient chatClient() {
-        ChatClient chatClient = ChatClient.create(primaryOllamaModel());
+//        ChatClient chatClient = ChatClient.create(primaryOllamaModel());
+        ChatClient chatClient = ChatClient.builder(primaryOllamaModel())
+                .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
+                .build();
         return chatClient;
     }
+
 }

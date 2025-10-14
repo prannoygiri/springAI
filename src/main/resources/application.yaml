@@ -1,0 +1,35 @@
+server:
+  port:8080
+
+spring:
+
+  application:
+    name: springAI
+
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        model: llama3.2
+        memory:
+          enabled: false
+    memory:
+      store:
+        type: jdbc
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+
+  http:
+    client:
+      factory: jdk
+
+logging:
+  level:
+    org:
+      springframework:
+        ai:
+          chat:
+            client:
+              advisor: DEBUG

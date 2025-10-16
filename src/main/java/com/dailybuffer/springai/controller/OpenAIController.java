@@ -27,4 +27,11 @@ public class OpenAIController {
     public String prompt(@RequestParam String message) {
         return sarcasticChatService.chat(message);
     }
+
+    @GetMapping("/image")
+    public String image() {
+        return sarcasticChatService.whatImageIs();
+    }
+
+
 }

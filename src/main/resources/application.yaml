@@ -25,11 +25,11 @@ spring:
     client:
       factory: jdk
 
-logging:
-  level:
-    org:
-      springframework:
-        ai:
-          chat:
-            client:
-              advisor: DEBUG
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        ai:
+#          chat:
+#            client:
+#              advisor: DEBUG
